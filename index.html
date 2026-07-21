@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHRM-CP Exam Prep — 100-Card Study Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#161d27;
+    --bg-vignette:#0f141c;
+    --card-face:#efe4c8;
+    --card-face-back:#e8dbb8;
+    --ink:#2a241d;
+    --ink-soft:#6b6152;
+    --rule:#c8b98d;
+    --brass:#b9975b;
+    --brass-dim:#8a7548;
+    --forest:#3b5d45;
+    --forest-dim:#2c4634;
+    --rust:#a3402c;
+    --paper-shadow: rgba(0,0,0,0.45);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse at 50% -10%, #223047 0%, var(--bg) 55%, var(--bg-vignette) 100%);
+    color:#e9e2cf;
+    font-family:'Lora', serif;
+    min-height:100vh;
+    padding:32px 16px 56px;
+    display:flex;
+    justify-content:center;
+  }
+  .deck{
+    width:100%;
+    max-width:720px;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    border-bottom:1px solid #33405a;
+    padding-bottom:14px;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .title-block .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.18em;
+    color:var(--brass);
+    text-transform:uppercase;
+  }
+  .title-block h1{
+    font-family:'Special Elite', monospace;
+    font-weight:400;
+    font-size:26px;
+    margin:4px 0 0;
+    color:#f2ead4;
+    letter-spacing:0.02em;
+  }
+  .file-index{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:#a9b4c6;
+    text-align:right;
+    line-height:1.5;
+  }
+  .file-index b{ color:#f2ead4; font-weight:600; }
+
+  /* ---------- Category tabs ---------- */
+  .tabs{
+    display:flex;
+    gap:6px;
+    overflow-x:auto;
+    padding:2px 2px 12px;
+    margin-bottom:6px;
+    scrollbar-width:thin;
+  }
+  .tabs::-webkit-scrollbar{ height:6px; }
+  .tabs::-webkit-scrollbar-thumb{ background:#33405a; border-radius:3px; }
+  .tab-btn{
+    flex:0 0 auto;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:#c7cfdd;
+    background:#202a3a;
+    border:1px solid #3a4761;
+    padding:7px 12px;
+    border-radius:3px 3px 0 0;
+    cursor:pointer;
+    transition:background .15s, color .15s, transform .1s;
+  }
+  .tab-btn:hover{ background:#28344a; color:#f2ead4; }
+  .tab-btn.active{
+    background:var(--brass);
+    border-color:var(--brass);
+    color:#221a0d;
+    font-weight:600;
+  }
+  .tab-btn:focus-visible{ outline:2px solid #f2ead4; outline-offset:2px; }
+
+  /* ---------- Progress ---------- */
+  .progress-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:22px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:#9aa5b8;
+  }
+  .progress-track{
+    flex:1;
+    height:6px;
+    background:#232f42;
+    border-radius:3px;
+    overflow:hidden;
+    display:flex;
+  }
+  .progress-fill-known{ height:100%; background:var(--forest); }
+  .progress-fill-review{ height:100%; background:var(--rust); }
+  .legend{ display:flex; gap:14px; white-space:nowrap; }
+  .legend span{ display:inline-flex; align-items:center; gap:5px; }
+  .dot{ width:8px; height:8px; border-radius:50%; display:inline-block; }
+  .dot.known{ background:var(--forest); }
+  .dot.review{ background:var(--rust); }
+
+  /* ---------- Card stage ---------- */
+  .stage{
+    display:flex;
+    justify-content:center;
+    margin-bottom:22px;
+  }
+  .card-scene{
+    width:100%;
+    max-width:520px;
+    aspect-ratio:5/3.4;
+    perspective:1600px;
+    cursor:pointer;
+  }
+  .card-inner{
+    position:relative;
+    width:100%;
+    height:100%;
+    transition:transform .55s cubic-bezier(.2,.7,.3,1);
+    transform-style:preserve-3d;
+  }
+  .card-scene.flipped .card-inner{ transform:rotateY(180deg); }
+
+  .card-face{
+    position:absolute;
+    inset:0;
+    backface-visibility:hidden;
+    border-radius:4px;
+    background:
+      repeating-linear-gradient(180deg, transparent 0 33px, rgba(180,160,110,0.16) 33px 34px),
+      linear-gradient(160deg, var(--card-face) 0%, var(--card-face) 100%);
+    box-shadow:
+      0 18px 34px var(--paper-shadow),
+      0 2px 0 var(--brass-dim) inset;
+    border:1px solid #d8c99a;
+    padding:34px 30px 26px;
+    display:flex;
+    flex-direction:column;
+  }
+  .card-face.back{
+    transform:rotateY(180deg);
+    background:
+      repeating-linear-gradient(180deg, transparent 0 33px, rgba(180,160,110,0.16) 33px 34px),
+      linear-gradient(160deg, var(--card-face-back) 0%, var(--card-face-back) 100%);
+  }
+
+  .card-tab{
+    position:absolute;
+    top:-14px;
+    left:26px;
+    background:var(--brass);
+    color:#221a0d;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    font-weight:600;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    padding:5px 12px;
+    border-radius:3px 3px 0 0;
+    box-shadow:0 -2px 0 rgba(0,0,0,0.15) inset;
+  }
+
+  .card-kicker{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    margin-bottom:14px;
+  }
+  .card-body{
+    flex:1;
+    display:flex;
+    align-items:center;
+  }
+  .card-body p{
+    margin:0;
+    color:var(--ink);
+    font-size:20px;
+    line-height:1.5;
+    font-weight:500;
+  }
+  .card-face.back .card-body p{
+    font-size:18px;
+    font-weight:400;
+  }
+  .card-hint{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    color:var(--ink-soft);
+    text-align:right;
+    letter-spacing:0.04em;
+  }
+
+  .stamp{
+    position:absolute;
+    top:14px;
+    right:22px;
+    font-family:'Special Elite', monospace;
+    font-size:22px;
+    color:var(--rust);
+    border:3px solid var(--rust);
+    border-radius:6px;
+    padding:2px 10px;
+    transform:rotate(9deg);
+    opacity:0.75;
+    letter-spacing:0.08em;
+    pointer-events:none;
+    mix-blend-mode:multiply;
+  }
+
+  /* ---------- Controls ---------- */
+  .controls{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:10px;
+  }
+  button.ctrl{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.03em;
+    padding:10px 14px;
+    border-radius:3px;
+    border:1px solid #3a4761;
+    background:#202a3a;
+    color:#dbe1ec;
+    cursor:pointer;
+    transition:background .15s, transform .1s;
+  }
+  button.ctrl:hover{ background:#28344a; }
+  button.ctrl:active{ transform:translateY(1px); }
+  button.ctrl:focus-visible{ outline:2px solid #f2ead4; outline-offset:2px; }
+  button.ctrl.primary{
+    background:var(--brass);
+    border-color:var(--brass);
+    color:#221a0d;
+    font-weight:600;
+  }
+  button.ctrl.primary:hover{ background:#c9a869; }
+  button.ctrl.know{ background:var(--forest); border-color:var(--forest); color:#eef4ee; }
+  button.ctrl.know:hover{ background:var(--forest-dim); }
+  button.ctrl.review{ background:transparent; border-color:var(--rust); color:#e3a693; }
+  button.ctrl.review:hover{ background:rgba(163,64,44,0.18); }
+
+  .foot-note{
+    text-align:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:#6d7893;
+    margin-top:18px;
+    line-height:1.6;
+  }
+  .foot-note button{
+    background:none;
+    border:none;
+    color:#8a97b3;
+    text-decoration:underline;
+    cursor:pointer;
+    font-family:inherit;
+    font-size:inherit;
+    padding:0;
+  }
+
+  @media (max-width:480px){
+    .title-block h1{ font-size:21px; }
+    .card-body p{ font-size:17px; }
+    .card-face{ padding:28px 20px 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .card-inner{ transition:none; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <header>
+    <div class="title-block">
+      <div class="eyebrow">Personnel File · Study Series</div>
+      <h1>SHRM-CP Exam Prep</h1>
+    </div>
+    <div class="file-index">
+      CARD <b id="cardPos">1</b> / <span id="cardTotal">100</span><br>
+      <span id="catLabel">All Categories</span>
+    </div>
+  </header>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="progress-row">
+    <span>PROGRESS</span>
+    <div class="progress-track">
+      <div class="progress-fill-known" id="fillKnown" style="width:0%"></div>
+      <div class="progress-fill-review" id="fillReview" style="width:0%"></div>
+    </div>
+    <div class="legend">
+      <span><i class="dot known"></i>Know it: <b id="knownCount">0</b></span>
+      <span><i class="dot review"></i>Review: <b id="reviewCount">0</b></span>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="card-scene" id="cardScene">
+      <div class="card-inner" id="cardInner">
+        <div class="card-face front">
+          <div class="card-tab" id="tabFront">LAW · CARD 001</div>
+          <div class="card-kicker">Question</div>
+          <div class="card-body"><p id="qText">Loading…</p></div>
+          <div class="card-hint">tap card to reveal answer</div>
+        </div>
+        <div class="card-face back">
+          <div class="card-tab" id="tabBack">LAW · CARD 001</div>
+          <div class="stamp">ANSWER</div>
+          <div class="card-kicker">Answer</div>
+          <div class="card-body"><p id="aText">Loading…</p></div>
+          <div class="card-hint">tap card to flip back</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl" id="btnPrev">◂ Prev</button>
+    <button class="ctrl" id="btnShuffle">⤮ Shuffle</button>
+    <button class="ctrl review" id="btnReview">Review again</button>
+    <button class="ctrl know" id="btnKnow">Know it ✓</button>
+    <button class="ctrl" id="btnNext">Next ▸</button>
+  </div>
+
+  <div class="foot-note">
+    ←/→ to move · space to flip &nbsp;·&nbsp; <button id="btnReset">reset all progress</button>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const DATA = [
+    {id:1,cat:"law",q:"What does Title VII of the Civil Rights Act of 1964 prohibit?",a:"Employment discrimination based on race, color, religion, sex, or national origin; applies to employers with 15+ employees."},
+    {id:2,cat:"law",q:"What is the minimum employer size covered under the ADA (1990)?",a:"15 or more employees; requires reasonable accommodation for qualified individuals with disabilities."},
+    {id:3,cat:"law",q:"Who is protected under the Age Discrimination in Employment Act (ADEA)?",a:"Workers age 40 and older, at employers with 20 or more employees."},
+    {id:4,cat:"law",q:"How many weeks of unpaid, job-protected leave does the FMLA provide?",a:"Up to 12 weeks in a 12-month period for eligible employees at covered employers (50+ employees within 75 miles)."},
+    {id:5,cat:"law",q:"What are the FMLA employee eligibility requirements?",a:"12 months of employment and at least 1,250 hours worked in the preceding 12 months."},
+    {id:6,cat:"law",q:"What does the Fair Labor Standards Act (FLSA) regulate?",a:"Minimum wage, overtime pay, recordkeeping, and child labor standards."},
+    {id:7,cat:"law",q:"What overtime rate does the FLSA require for non-exempt employees?",a:"1.5x the regular rate of pay for hours worked over 40 in a workweek."},
+    {id:8,cat:"law",q:"What agency enforces workplace safety under the Occupational Safety and Health Act?",a:"OSHA (Occupational Safety and Health Administration), part of the U.S. Department of Labor."},
+    {id:9,cat:"law",q:"What does COBRA allow terminated employees to do?",a:"Continue employer-sponsored group health coverage, typically for 18–36 months, at their own cost."},
+    {id:10,cat:"law",q:"What does ERISA regulate?",a:"Minimum standards for most voluntarily established retirement and health benefit plans in private industry."},
+    {id:11,cat:"law",q:"What triggers WARN Act notice requirements?",a:"Plant closings or mass layoffs at employers with 100+ employees; requires 60 days' advance written notice."},
+    {id:12,cat:"law",q:"What does the National Labor Relations Act (NLRA) protect?",a:"Employees' rights to organize, form unions, and engage in collective bargaining and other protected concerted activity."},
+    {id:13,cat:"law",q:"What does the Equal Pay Act of 1963 require?",a:"Equal pay for men and women performing substantially equal work in the same establishment."},
+    {id:14,cat:"law",q:"What did the Pregnancy Discrimination Act of 1978 do?",a:"Amended Title VII to prohibit discrimination based on pregnancy, childbirth, or related medical conditions."},
+    {id:15,cat:"law",q:"What does USERRA protect?",a:"Reemployment and job protection rights for employees who leave work for military service."},
+    {id:16,cat:"law",q:"What does GINA (2008) prohibit?",a:"Discrimination based on genetic information in employment and health insurance."},
+    {id:17,cat:"law",q:"What form verifies an employee's identity and eligibility to work in the U.S.?",a:"Form I-9, required under the Immigration Reform and Control Act."},
+    {id:18,cat:"law",q:"What law governs the use of consumer reports (background checks) in hiring?",a:"The Fair Credit Reporting Act (FCRA)."},
+    {id:19,cat:"law",q:"What does HIPAA protect in the employment context?",a:"The privacy and security of individually identifiable health information, and portability of health coverage."},
+    {id:20,cat:"law",q:"What is \"employment-at-will\"?",a:"The default doctrine that either employer or employee may end the employment relationship at any time, for any lawful reason or no reason, absent a contract or exception."},
+
+    {id:21,cat:"talent",q:"What is the \"four-fifths rule\"?",a:"A guideline for adverse impact: a selection rate for a protected group less than 80% of the rate for the highest group may indicate discrimination."},
+    {id:22,cat:"talent",q:"What is a \"realistic job preview\"?",a:"Giving candidates accurate, balanced information about a job's demands and rewards before hire to improve fit and reduce turnover."},
+    {id:23,cat:"talent",q:"What is an Applicant Tracking System (ATS)?",a:"Software that manages the recruitment process, from posting jobs to sorting and tracking candidates."},
+    {id:24,cat:"talent",q:"What is \"employer branding\"?",a:"The company's reputation and value proposition as an employer, used to attract and retain talent."},
+    {id:25,cat:"talent",q:"What is a \"structured interview\"?",a:"An interview using a standardized set of job-related questions and scoring criteria applied consistently to all candidates."},
+    {id:26,cat:"talent",q:"What is \"adverse impact\"?",a:"An unintentional, disproportionate negative effect of a neutral employment practice on a protected group."},
+    {id:27,cat:"talent",q:"What is the \"selection ratio\"?",a:"The number of positions filled divided by the number of applicants for those positions."},
+    {id:28,cat:"talent",q:"What is succession planning, in a talent acquisition context?",a:"Identifying and developing internal candidates to fill key roles in the future."},
+    {id:29,cat:"talent",q:"What is an Employee Value Proposition (EVP)?",a:"The unique set of benefits, rewards, and experiences an employee receives in return for their skills and contributions."},
+    {id:30,cat:"talent",q:"What is \"boomerang hiring\"?",a:"Rehiring former employees who left the organization in good standing."},
+
+    {id:31,cat:"rewards",q:"What is a \"compa-ratio\"?",a:"An employee's pay divided by the midpoint of the pay range; shows where pay falls relative to the range."},
+    {id:32,cat:"rewards",q:"What does \"red-circled\" pay mean?",a:"An employee's pay is above the maximum of their salary range."},
+    {id:33,cat:"rewards",q:"What does \"green-circled\" pay mean?",a:"An employee's pay is below the minimum of their salary range."},
+    {id:34,cat:"rewards",q:"What are the elements of SHRM's Total Rewards model?",a:"Compensation, benefits, well-being, recognition, and development/career opportunities."},
+    {id:35,cat:"rewards",q:"What is \"broadbanding\"?",a:"Consolidating many narrow salary grades into fewer, wider pay bands."},
+    {id:36,cat:"rewards",q:"What distinguishes an exempt employee from a non-exempt employee under the FLSA?",a:"Exempt employees aren't entitled to overtime if they meet duties and salary-basis tests; non-exempt employees must be paid overtime."},
+    {id:37,cat:"rewards",q:"What is a \"cafeteria plan\" (Section 125 plan)?",a:"A benefits plan letting employees choose from a menu of pre-tax benefit options."},
+    {id:38,cat:"rewards",q:"What is \"pay compression\"?",a:"When there is little difference in pay between employees regardless of experience or skill, often from new hires being paid close to tenured staff."},
+    {id:39,cat:"rewards",q:"What is the purpose of a salary survey?",a:"To benchmark an organization's pay against the external labor market for comparable jobs."},
+    {id:40,cat:"rewards",q:"How does a defined contribution plan differ from a defined benefit plan?",a:"A defined contribution plan (e.g., 401(k)) sets contribution amounts with a variable payout; a defined benefit plan (pension) guarantees a set payout at retirement."},
+
+    {id:41,cat:"relations",q:"What is \"progressive discipline\"?",a:"A structured, step-by-step disciplinary process (e.g., verbal warning, written warning, suspension, termination) that escalates with repeated issues."},
+    {id:42,cat:"relations",q:"What is a \"grievance procedure\"?",a:"A formal process for employees to raise and resolve workplace complaints, common in unionized settings."},
+    {id:43,cat:"relations",q:"What is a collective bargaining agreement (CBA)?",a:"A negotiated contract between an employer and a union covering wages, hours, and working conditions."},
+    {id:44,cat:"relations",q:"What is \"just cause\"?",a:"A standard requiring an employer to have a fair, work-related reason before disciplining or terminating an employee, common in union contracts."},
+    {id:45,cat:"relations",q:"What is the purpose of an exit interview?",a:"To gather feedback from departing employees to identify trends and improve retention."},
+    {id:46,cat:"relations",q:"What is \"constructive discharge\"?",a:"When an employee resigns because the employer created intolerable working conditions, treated legally as an involuntary termination."},
+    {id:47,cat:"relations",q:"What is a \"hostile work environment\"?",a:"Unwelcome conduct based on a protected characteristic that is severe or pervasive enough to alter conditions of employment."},
+    {id:48,cat:"relations",q:"What is \"quid pro quo\" harassment?",a:"Harassment where employment benefits are conditioned on submission to unwelcome sexual advances."},
+    {id:49,cat:"relations",q:"What is an \"open door policy\"?",a:"A practice encouraging employees to raise concerns directly with management without going through formal channels."},
+    {id:50,cat:"relations",q:"What does \"union avoidance\" refer to?",a:"Proactive employer strategies (culture, communication, fair practices) intended to reduce employees' interest in union organizing."},
+
+    {id:51,cat:"learning",q:"What does the ADDIE model stand for?",a:"Analysis, Design, Development, Implementation, Evaluation — a framework for instructional design."},
+    {id:52,cat:"learning",q:"What are Kirkpatrick's four levels of training evaluation?",a:"Reaction, Learning, Behavior, and Results."},
+    {id:53,cat:"learning",q:"What is the 70-20-10 model of learning?",a:"70% of learning comes from on-the-job experience, 20% from social/coaching interactions, and 10% from formal training."},
+    {id:54,cat:"learning",q:"What is a \"training needs assessment\"?",a:"A process to identify gaps between current and desired performance to determine what training is needed."},
+    {id:55,cat:"learning",q:"What is \"onboarding\"?",a:"The process of integrating a new employee into an organization's culture, role, and processes."},
+    {id:56,cat:"learning",q:"What is a Learning Management System (LMS)?",a:"Software used to administer, track, and deliver training and educational courses."},
+    {id:57,cat:"learning",q:"How does mentoring differ from coaching?",a:"Mentoring is a longer-term relationship focused on career/personal development; coaching is typically shorter-term and focused on specific skills or performance."},
+    {id:58,cat:"learning",q:"What is a \"career path\"?",a:"A planned sequence of jobs or roles an employee may progress through within an organization."},
+
+    {id:59,cat:"strategy",q:"What is \"turnover rate\"?",a:"The percentage of employees who leave an organization during a specific period, typically separations divided by average headcount."},
+    {id:60,cat:"strategy",q:"What is \"cost per hire\"?",a:"Total recruiting costs divided by the number of hires in a given period."},
+    {id:61,cat:"strategy",q:"What is \"time to fill\"?",a:"The number of days from when a job requisition opens to when a candidate accepts an offer."},
+    {id:62,cat:"strategy",q:"What is an HR scorecard?",a:"A tool that links HR activities and outcomes to organizational strategy using measurable metrics."},
+    {id:63,cat:"strategy",q:"What is \"strategic HR planning\"?",a:"Aligning HR policies and practices with the organization's overall business strategy and future workforce needs."},
+    {id:64,cat:"strategy",q:"What is a SWOT analysis used for in HR?",a:"Assessing an organization's or function's Strengths, Weaknesses, Opportunities, and Threats to inform strategy."},
+    {id:65,cat:"strategy",q:"What is \"employee engagement\"?",a:"The degree of emotional commitment and discretionary effort an employee brings to their work and organization."},
+    {id:66,cat:"strategy",q:"What does ROI mean in the context of HR programs?",a:"Return on investment — the financial benefit of a program relative to its cost."},
+
+    {id:67,cat:"dei",q:"What is the difference between diversity and inclusion?",a:"Diversity is the presence of differences within a workforce; inclusion is creating an environment where all people feel valued and able to participate fully."},
+    {id:68,cat:"dei",q:"What is \"unconscious bias\"?",a:"Implicit attitudes or stereotypes that affect decisions and judgments without conscious awareness."},
+    {id:69,cat:"dei",q:"What is affirmative action?",a:"Proactive steps, often required of federal contractors, to increase representation of underrepresented groups in the workforce."},
+    {id:70,cat:"dei",q:"What is an EEO-1 report?",a:"An annual report certain employers must file with the EEOC showing workforce demographics by job category, race/ethnicity, and sex."},
+    {id:71,cat:"dei",q:"What is an Employee Resource Group (ERG)?",a:"A voluntary, employee-led group organized around a shared identity or interest that supports inclusion and professional development."},
+    {id:72,cat:"dei",q:"What is \"cultural competence\"?",a:"The ability to understand, communicate with, and effectively interact with people across cultures."},
+    {id:73,cat:"dei",q:"How does \"equity\" differ from \"equality\"?",a:"Equality gives everyone the same resources; equity allocates resources based on individual needs to achieve fair outcomes."},
+    {id:74,cat:"dei",q:"What is intersectionality?",a:"The concept that individuals can experience overlapping forms of discrimination or disadvantage based on multiple identities."},
+
+    {id:75,cat:"risk",q:"What is the OSHA 300 log?",a:"A record employers must maintain of work-related injuries and illnesses."},
+    {id:76,cat:"risk",q:"What is workers' compensation?",a:"A state-mandated insurance program providing wage replacement and medical benefits to employees injured on the job, regardless of fault."},
+    {id:77,cat:"risk",q:"What is a \"business continuity plan\"?",a:"A documented plan outlining how an organization will continue operating during and after a disruptive event."},
+    {id:78,cat:"risk",q:"What is \"ergonomics\" in workplace safety?",a:"Designing tasks, equipment, and workspaces to fit the physical capabilities of workers and reduce injury risk."},
+    {id:79,cat:"risk",q:"What is an \"incident investigation\" used for in risk management?",a:"Determining the root cause of a workplace accident or near-miss to prevent recurrence."},
+    {id:80,cat:"risk",q:"What is a Safety Data Sheet (SDS)?",a:"A document providing information on the properties, hazards, and safe handling of a chemical substance."},
+    {id:81,cat:"risk",q:"What is workplace violence prevention typically focused on?",a:"Policies, training, and procedures to identify warning signs and reduce the risk of violence in the workplace."},
+    {id:82,cat:"risk",q:"What does \"duty of care\" mean for an employer?",a:"The legal and ethical obligation to take reasonable steps to protect employees' health, safety, and well-being."},
+
+    {id:83,cat:"competencies",q:"What are the three clusters of SHRM's behavioral competencies?",a:"Leadership, Interpersonal, and Business."},
+    {id:84,cat:"competencies",q:"Which two competencies fall under the Leadership cluster?",a:"Leadership & Navigation and Ethical Practice."},
+    {id:85,cat:"competencies",q:"Which four competencies fall under the Interpersonal cluster?",a:"Relationship Management, Communication, Global Mindset, and Diversity, Equity & Inclusion."},
+    {id:86,cat:"competencies",q:"Which three competencies fall under the Business cluster?",a:"Business Acumen, Consultation, and Critical Evaluation."},
+    {id:87,cat:"competencies",q:"What does the \"Leadership & Navigation\" competency involve?",a:"The ability to direct and contribute to initiatives and processes within the organization."},
+    {id:88,cat:"competencies",q:"What does \"Ethical Practice\" mean in the SHRM competency model?",a:"Integrating core values, integrity, and accountability into all organizational and business practices."},
+    {id:89,cat:"competencies",q:"What does \"Critical Evaluation\" involve?",a:"Interpreting information to make business decisions and recommendations."},
+    {id:90,cat:"competencies",q:"What does \"Consultation\" mean as an HR competency?",a:"Providing guidance to organizational stakeholders, including coaching, facilitating, and problem-solving."},
+    {id:91,cat:"competencies",q:"What does \"Global Mindset\" involve?",a:"Valuing and considering diverse, cross-cultural perspectives in HR and business decisions."},
+    {id:92,cat:"competencies",q:"What does \"Business Acumen\" mean for an HR professional?",a:"Understanding and applying business information to contribute to the organization's strategic plan."},
+
+    {id:93,cat:"org",q:"What is \"span of control\"?",a:"The number of direct reports a manager oversees."},
+    {id:94,cat:"org",q:"What is a \"matrix organization\"?",a:"A structure where employees report to more than one manager, often across functional and project lines."},
+    {id:95,cat:"org",q:"What is the \"HR business partner\" model?",a:"An HR structure where HR professionals align closely with specific business units to support strategic goals."},
+    {id:96,cat:"org",q:"What is a \"shared services\" model in HR?",a:"Centralizing routine, transactional HR functions (e.g., payroll, benefits admin) to serve the whole organization efficiently."},
+    {id:97,cat:"org",q:"What is \"organizational development\" (OD)?",a:"A planned, systematic effort to improve organizational effectiveness through change in culture, systems, and processes."},
+    {id:98,cat:"org",q:"What is \"change management\"?",a:"A structured approach to transitioning individuals and organizations from a current state to a desired future state."},
+    {id:99,cat:"org",q:"How does a \"centralized\" HR structure differ from a \"decentralized\" one?",a:"Centralized HR consolidates decision-making at a corporate level; decentralized HR distributes authority to business units or locations."},
+    {id:100,cat:"org",q:"What is Lewin's three-step change model?",a:"Unfreeze, Change, Refreeze — a framework for managing organizational change."}
+  ];
+
+  const CATS = [
+    {key:"all", label:"All"},
+    {key:"law", label:"Employment Law"},
+    {key:"talent", label:"Talent Acquisition"},
+    {key:"rewards", label:"Total Rewards"},
+    {key:"relations", label:"Labor Relations"},
+    {key:"learning", label:"Learning & Dev"},
+    {key:"strategy", label:"HR Strategy"},
+    {key:"dei", label:"DE&I"},
+    {key:"risk", label:"Risk & Safety"},
+    {key:"competencies", label:"Competencies"},
+    {key:"org", label:"Org Design"}
+  ];
+  const CAT_NAME = {}; CATS.forEach(c=>CAT_NAME[c.key]=c.label);
+
+  const STORAGE_KEY = "shrm-cp-progress";
+
+  let state = {
+    category:"all",
+    order: DATA.map(d=>d.id),
+    index:0,
+    known:new Set(),
+    review:new Set()
+  };
+
+  const $ = id=>document.getElementById(id);
+  const tabsEl=$("tabs"), cardScene=$("cardScene"), cardInner=$("cardInner");
+  const qText=$("qText"), aText=$("aText"), tabFront=$("tabFront"), tabBack=$("tabBack");
+  const cardPos=$("cardPos"), cardTotal=$("cardTotal"), catLabel=$("catLabel");
+  const knownCount=$("knownCount"), reviewCount=$("reviewCount");
+  const fillKnown=$("fillKnown"), fillReview=$("fillReview");
+
+  function buildTabs(){
+    tabsEl.innerHTML="";
+    CATS.forEach(c=>{
+      const b=document.createElement("button");
+      b.className="tab-btn"+(c.key===state.category?" active":"");
+      b.textContent=c.label;
+      b.addEventListener("click",()=>{
+        state.category=c.key;
+        state.order = (c.key==="all"? DATA.map(d=>d.id) : DATA.filter(d=>d.cat===c.key).map(d=>d.id));
+        state.index=0;
+        buildTabs();
+        render();
+      });
+      tabsEl.appendChild(b);
+    });
+  }
+
+  function currentCard(){
+    const id = state.order[state.index];
+    return DATA.find(d=>d.id===id);
+  }
+
+  function render(){
+    cardScene.classList.remove("flipped");
+    const c = currentCard();
+    if(!c){ return; }
+    qText.textContent=c.q;
+    aText.textContent=c.a;
+    const label = CAT_NAME[c.cat].toUpperCase()+" · CARD "+String(c.id).padStart(3,"0");
+    tabFront.textContent=label;
+    tabBack.textContent=label;
+    cardPos.textContent = state.index+1;
+    cardTotal.textContent = state.order.length;
+    catLabel.textContent = CAT_NAME[state.category] === "All" ? "All Categories" : CAT_NAME[state.category];
+    updateProgress();
+  }
+
+  function updateProgress(){
+    const total = state.order.length || 1;
+    let knownInSet=0, reviewInSet=0;
+    state.order.forEach(id=>{
+      if(state.known.has(id)) knownInSet++;
+      else if(state.review.has(id)) reviewInSet++;
+    });
+    knownCount.textContent = knownInSet;
+    reviewCount.textContent = reviewInSet;
+    fillKnown.style.width = (knownInSet/total*100)+"%";
+    fillReview.style.width = (reviewInSet/total*100)+"%";
+  }
+
+  function flip(){ cardScene.classList.toggle("flipped"); }
+  function next(){ state.index=(state.index+1)%state.order.length; render(); }
+  function prev(){ state.index=(state.index-1+state.order.length)%state.order.length; render(); }
+  function shuffle(){
+    for(let i=state.order.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [state.order[i],state.order[j]]=[state.order[j],state.order[i]];
+    }
+    state.index=0;
+    render();
+  }
+  function markKnow(){
+    const c=currentCard();
+    state.known.add(c.id); state.review.delete(c.id);
+    saveProgress(); next();
+  }
+  function markReview(){
+    const c=currentCard();
+    state.review.add(c.id); state.known.delete(c.id);
+    saveProgress(); next();
+  }
+  function resetProgress(){
+    state.known.clear(); state.review.clear();
+    saveProgress(); updateProgress();
+  }
+
+  async function saveProgress(){
+    try{
+      if(window.storage){
+        await window.storage.set(STORAGE_KEY, JSON.stringify({
+          known:[...state.known], review:[...state.review]
+        }), false);
+      }
+    }catch(e){ /* best effort only */ }
+  }
+  async function loadProgress(){
+    try{
+      if(window.storage){
+        const res = await window.storage.get(STORAGE_KEY, false);
+        if(res && res.value){
+          const parsed = JSON.parse(res.value);
+          state.known = new Set(parsed.known||[]);
+          state.review = new Set(parsed.review||[]);
+        }
+      }
+    }catch(e){ /* no saved progress yet */ }
+    updateProgress();
+  }
+
+  cardScene.addEventListener("click", flip);
+  $("btnPrev").addEventListener("click", prev);
+  $("btnNext").addEventListener("click", next);
+  $("btnShuffle").addEventListener("click", shuffle);
+  $("btnKnow").addEventListener("click", markKnow);
+  $("btnReview").addEventListener("click", markReview);
+  $("btnReset").addEventListener("click", resetProgress);
+
+  document.addEventListener("keydown", (e)=>{
+    if(e.key==="ArrowRight") next();
+    else if(e.key==="ArrowLeft") prev();
+    else if(e.key===" "){ e.preventDefault(); flip(); }
+  });
+
+  buildTabs();
+  loadProgress().then(render);
+})();
+</script>
+</body>
+</html>
