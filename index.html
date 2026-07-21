@@ -300,6 +300,40 @@
     padding:0;
   }
 
+  .promo-footer{
+    margin-top:28px;
+    padding-top:20px;
+    border-top:1px solid #2a3651;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
+  }
+  .amazon-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.03em;
+    font-weight:600;
+    color:#221a0d;
+    background:var(--brass);
+    border:1px solid var(--brass);
+    padding:11px 18px;
+    border-radius:3px;
+    text-decoration:none;
+    transition:background .15s, transform .1s;
+  }
+  .amazon-btn:hover{ background:#c9a869; }
+  .amazon-btn:active{ transform:translateY(1px); }
+  .copyright{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    color:#5a6580;
+    text-align:center;
+  }
+
   @media (max-width:480px){
     .title-block h1{ font-size:21px; }
     .card-body p{ font-size:17px; }
@@ -369,6 +403,11 @@
 
   <div class="foot-note">
     ←/→ to move · space to flip &nbsp;·&nbsp; <button id="btnReset">reset all progress</button>
+  </div>
+
+  <div class="promo-footer">
+    <a class="amazon-btn" href="https://www.amazon.com/dp/YOUR-ASIN-HERE" target="_blank" rel="noopener">★ Leave a review on Amazon</a>
+    <div class="copyright">© 2026 YOUR NAME OR BRAND. All rights reserved.</div>
   </div>
 
 </div>
